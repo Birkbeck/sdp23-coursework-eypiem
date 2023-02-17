@@ -13,13 +13,20 @@ import java.util.Objects;
  *
  * @author Amir Parsa Mahdian
  */
-
 public class AddInstruction extends Instruction {
 	private final RegisterName result;
 	private final RegisterName source;
 
 	public static final String OP_CODE = "add";
 
+	/**
+	 * Constructor: an add instruction with a label and an opcode
+	 * (opcode must be an operation of the language)
+	 *
+	 * @param label  optional label (can be null)
+	 * @param result result register
+	 * @param source source register
+	 */
 	public AddInstruction(String label, RegisterName result, RegisterName source) {
 		super(label, OP_CODE);
 		this.result = result;
