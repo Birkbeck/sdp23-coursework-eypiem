@@ -4,6 +4,7 @@ package sml;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 // TODO: write a JavaDoc for the class
 
@@ -24,6 +25,9 @@ public final class Labels {
     public void addLabel(String label, int address) {
         Objects.requireNonNull(label);
         // TODO: Add a check that there are no label duplicates.
+        if (labels.containsKey(label)) {
+            throw new RuntimeException("Duplicate label " + label + " found.");
+        }
         labels.put(label, address);
     }
 
@@ -36,12 +40,12 @@ public final class Labels {
     public int getAddress(String label) {
         // TODO: Where can NullPointerException be thrown here?
         //       When no mapping exists for the key or the value is explicitly set to null because null cannot be
-		//       assigned to an int.
+        //       assigned to an int.
         //       Add code to deal with non-existent labels.
-		Integer index = labels.get(label);
-		if (index == null) {
-			throw new RuntimeException("Label " + label + " not found.");
-		}
+        Integer index = labels.get(label);
+        if (index == null) {
+            throw new RuntimeException("Label " + label + " not found.");
+        }
         return labels.get(label);
     }
 
@@ -54,10 +58,26 @@ public final class Labels {
     @Override
     public String toString() {
         // TODO: Implement the method using the Stream API (see also class Registers).
-        return "";
+        return labels.entrySet()
+                .stream()
+                .map(e -> e.getKey() + " -> " + e.getValue())
+                .collect(Collectors.joining(", ", "[", "]"));
     }
 
     // TODO: Implement equals and hashCode (needed in class Machine).
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Labels other) {
+            return Objects.equals(this.labels, other.labels);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(labels);
+    }
 
     /**
      * Removes the labels
