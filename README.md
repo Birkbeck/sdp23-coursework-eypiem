@@ -19,9 +19,9 @@ amongst other skills.
 
 ## Details
 
-**Name**: Your name should appear here
+**Name**: Amir Parsa Mahdian
 
-**Your userid**: e.g., myname01
+**Your userid**: amahdi03
 
 Please do not forget to complete this part as too often we have "orphaned" repositories,
 which can require months to sort out.
