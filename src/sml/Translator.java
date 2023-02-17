@@ -11,11 +11,11 @@ import java.util.Scanner;
 import static sml.Registers.Register;
 
 /**
- * This class ....
+ * Represents a translator.
  * <p>
  * The translator of a <b>S</b><b>M</b>al<b>L</b> program.
  *
- * @author ...
+ * @author Amir Parsa Mahdian
  */
 public final class Translator {
 
@@ -71,6 +71,21 @@ public final class Translator {
                 String r = scan();
                 String s = scan();
                 return new AddInstruction(label, Register.valueOf(r), Register.valueOf(s));
+            }
+            case SubInstruction.OP_CODE -> {
+                String r = scan();
+                String s = scan();
+                return new SubInstruction(label, Register.valueOf(r), Register.valueOf(s));
+            }
+            case MulInstruction.OP_CODE -> {
+                String r = scan();
+                String s = scan();
+                return new MulInstruction(label, Register.valueOf(r), Register.valueOf(s));
+            }
+            case DivInstruction.OP_CODE -> {
+                String r = scan();
+                String s = scan();
+                return new DivInstruction(label, Register.valueOf(r), Register.valueOf(s));
             }
 
             // TODO: add code for all other types of instructions
