@@ -4,10 +4,14 @@ import sml.Instruction;
 import sml.Machine;
 import sml.RegisterName;
 
+import java.util.Objects;
+
 // TODO: write a JavaDoc for the class
 
 /**
- * @author
+ * Represents an add instruction.
+ *
+ * @author Amir Parsa Mahdian
  */
 
 public class AddInstruction extends Instruction {
@@ -28,6 +32,21 @@ public class AddInstruction extends Instruction {
 		int value2 = m.getRegisters().get(source);
 		m.getRegisters().set(result, value1 + value2);
 		return NORMAL_PROGRAM_COUNTER_UPDATE;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof AddInstruction other) {
+			return Objects.equals(this.label, other.label)
+				   && Objects.equals(this.result, other.result)
+				   && Objects.equals(this.source, other.source);
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(label, result, source);
 	}
 
 	@Override
