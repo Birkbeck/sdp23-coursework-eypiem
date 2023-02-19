@@ -1,11 +1,16 @@
 package sml;
 
-import sml.instruction.*;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
 
 import static sml.Registers.Register;
@@ -24,14 +29,15 @@ public final class Translator {
     // line contains the characters in the current line that's not been processed yet
     private String line = "";
 
+    private final static String INSTRUCTIONS = "instructions";
+
     public Translator(String fileName) {
-        this.fileName =  fileName;
+        this.fileName = fileName;
     }
 
     // translate the small program in the file into lab (the labels) and
     // prog (the program)
     // return "no errors were detected"
-
     public void readAndTranslate(Labels labels, List<Instruction> program) throws IOException {
         try (var sc = new Scanner(new File(fileName), StandardCharsets.UTF_8)) {
             labels.reset();
@@ -66,56 +72,82 @@ public final class Translator {
             return null;
 
         String opcode = scan();
-        switch (opcode) {
-            case AddInstruction.OP_CODE -> {
-                String r = scan();
-                String s = scan();
-                return new AddInstruction(label, Register.valueOf(r), Register.valueOf(s));
-            }
-            case SubInstruction.OP_CODE -> {
-                String r = scan();
-                String s = scan();
-                return new SubInstruction(label, Register.valueOf(r), Register.valueOf(s));
-            }
-            case MulInstruction.OP_CODE -> {
-                String r = scan();
-                String s = scan();
-                return new MulInstruction(label, Register.valueOf(r), Register.valueOf(s));
-            }
-            case DivInstruction.OP_CODE -> {
-                String r = scan();
-                String s = scan();
-                return new DivInstruction(label, Register.valueOf(r), Register.valueOf(s));
-            }
-            case OutInstruction.OP_CODE -> {
-                String r = scan();
-                return new OutInstruction(label, Register.valueOf(r));
-            }
-            case MovInstruction.OP_CODE -> {
-                String r = scan();
-                String s = scan();
-                return new MovInstruction(label, Register.valueOf(r), Integer.parseInt(s));
-            }
-            case JNZInstruction.OP_CODE -> {
-                String r = scan();
-                String s = scan();
-                return new JNZInstruction(label, Register.valueOf(r), s);
-            }
 
-            // TODO: add code for all other types of instructions
+        String className = getProperties().getProperty(opcode);
 
-            // TODO: Then, replace the switch by using the Reflection API
+        try {
+            Class<? extends Instruction> instructionClass = Class.forName(className).asSubclass(Instruction.class);
+            // Assumed each Instruction has one constructor
+            Constructor<? extends Instruction> candidateConstructor =
+                    ((Constructor<? extends Instruction>[]) instructionClass.getConstructors())[0];
+            Class<?>[] paramCons = candidateConstructor.getParameterTypes();
+            int argumentLen = candidateConstructor.getParameterCount();
+            Object[] paramObjs = new Object[argumentLen];
+            paramObjs[0] = label;
 
-            // TODO: Next, use dependency injection to allow this machine class
-            //       to work with different sets of opcodes (different CPUs)
-
-            default -> {
-                System.out.println("Unknown instruction: " + opcode);
+            for (int i = 1; i < argumentLen; i++) {
+                // attempt to type the parameters using any available string constructors
+                paramObjs[i] = getParamObj(scan(), paramCons[i]);
             }
+            return candidateConstructor.newInstance(paramObjs);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return null;
+
+        // TODO: add code for all other types of instructions
+
+        // TODO: Then, replace the switch by using the Reflection API
+
+        // TODO: Next, use dependency injection to allow this machine class
     }
 
+    private static Properties getProperties() {
+        Properties properties = new Properties();
+        try (InputStream file = new FileInputStream(INSTRUCTIONS)) {
+            properties.load(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return properties;
+    }
+
+    private static <T> T getParamObj(String s,
+                                     Class<? super T> c) throws NoSuchMethodException, InvocationTargetException,
+            InstantiationException, IllegalAccessException {
+        if (RegisterName.class.isAssignableFrom(c)) {
+            return (T) Register.valueOf(s);
+        }
+        return (T) toWrapper(c).getConstructor(String.class).newInstance(s);
+    }
+
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_TYPE_WRAPPERS = Map.of(int.class,
+            Integer.class,
+            long.class,
+            Long.class,
+            boolean.class,
+            Boolean.class,
+            byte.class,
+            Byte.class,
+            char.class,
+            Character.class,
+            float.class,
+            Float.class,
+            double.class,
+            Double.class,
+            short.class,
+            Short.class,
+            void.class,
+            Void.class);
+
+    /**
+     * Return the correct Wrapper class if testClass is primitive
+     *
+     * @param c class being tested
+     * @return Object class or testClass
+     */
+    private static Class<?> toWrapper(Class<?> c) {
+        return PRIMITIVE_TYPE_WRAPPERS.getOrDefault(c, c);
+    }
 
     private String getLabel() {
         String word = scan();

@@ -1,0 +1,7 @@
+add=sml.instruction.AddInstruction
+sub=sml.instruction.SubInstruction
+mul=sml.instruction.MulInstruction
+div=sml.instruction.DivInstruction
+mov=sml.instruction.MovInstruction
+out=sml.instruction.OutInstruction
+jnz=sml.instruction.JNZInstruction
