@@ -1,6 +1,7 @@
 package sml.instruction.factory;
 
 
+import org.springframework.stereotype.Component;
 import sml.Instruction;
 import sml.RegisterName;
 import sml.instruction.SubInstruction;
@@ -14,6 +15,7 @@ import java.util.function.Supplier;
  *
  * @author Amir Parsa Mahdian
  */
+@Component(SubInstruction.OP_CODE)
 public class SubInstructionFactory implements InstructionFactory {
     private final Function<String, RegisterName> registerValueOf;
 
