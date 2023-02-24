@@ -1,6 +1,7 @@
 package sml;
 
 
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import sml.instruction.factory.InstructionFactory;
@@ -68,8 +69,12 @@ public final class Translator {
 
         String opcode = scan();
 
-        InstructionFactory factory = context.getBean(opcode, InstructionFactory.class);
-        return factory.create(label, this::scan);
+        try {
+            InstructionFactory factory = context.getBean(opcode, InstructionFactory.class);
+            return factory.create(label, this::scan);
+        } catch (BeansException e) {
+            throw new RuntimeException("No instruction '" + opcode + "' available");
+        }
 
         // TODO: add code for all other types of instructions
 
