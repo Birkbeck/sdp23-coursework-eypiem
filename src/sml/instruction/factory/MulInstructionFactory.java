@@ -19,6 +19,11 @@ import java.util.function.Supplier;
 public class MulInstructionFactory implements InstructionFactory {
     private final Function<String, RegisterName> registerValueOf;
 
+    /**
+     * Constructor: a multiplication instruction factory.
+     *
+     * @param registerValueOf a function mapping a string to a register name
+     */
     public MulInstructionFactory(Function<String, RegisterName> registerValueOf) {
         this.registerValueOf = registerValueOf;
     }

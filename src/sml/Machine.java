@@ -25,6 +25,11 @@ public final class Machine {
 	// of the next instruction to be executed.
 	private int programCounter = 0;
 
+	/**
+	 * Constructor: a machine with registers
+	 *
+	 * @param registers registers of this machine
+	 */
 	public Machine(Registers registers) {
 		this.registers = registers;
 	}
@@ -45,14 +50,29 @@ public final class Machine {
 		}
 	}
 
+	/**
+	 * Returns this machine's labels.
+	 *
+	 * @return this machine's labels
+	 */
 	public Labels getLabels() {
 		return this.labels;
 	}
 
+	/**
+	 * Returns this machine's program.
+	 *
+	 * @return this machine's program
+	 */
 	public List<Instruction> getProgram() {
 		return this.program;
 	}
 
+	/**
+	 * Returns this machine's registers.
+	 *
+	 * @return this machine's registers
+	 */
 	public Registers getRegisters() {
 		return this.registers;
 	}

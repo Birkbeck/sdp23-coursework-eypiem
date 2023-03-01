@@ -19,6 +19,11 @@ import java.util.function.Supplier;
 public class OutInstructionFactory implements InstructionFactory {
     private final Function<String, RegisterName> registerValueOf;
 
+    /**
+     * Constructor: an out instruction factory.
+     *
+     * @param registerValueOf a function mapping a string to a register name
+     */
     public OutInstructionFactory(Function<String, RegisterName> registerValueOf) {
         this.registerValueOf = registerValueOf;
     }

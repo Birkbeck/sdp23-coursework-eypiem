@@ -19,6 +19,11 @@ import java.util.function.Supplier;
 public class JNZInstructionFactory implements InstructionFactory {
     private final Function<String, RegisterName> registerValueOf;
 
+    /**
+     * Constructor: a jump-not-zero instruction factory.
+     *
+     * @param registerValueOf a function mapping a string to a register name
+     */
     public JNZInstructionFactory(Function<String, RegisterName> registerValueOf) {
         this.registerValueOf = registerValueOf;
     }

@@ -22,6 +22,11 @@ public final class Translator {
     // line contains the characters in the current line that's not been processed yet
     private String line = "";
 
+    /**
+     * Constructor: a translator.
+     *
+     * @param fileName path to the file to be translated
+     */
     public Translator(String fileName) {
         this.fileName = fileName;
     }

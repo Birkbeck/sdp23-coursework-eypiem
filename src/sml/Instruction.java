@@ -23,10 +23,20 @@ public abstract class Instruction {
 		this.opcode = opcode;
 	}
 
+	/**
+	 * Returns this instruction's label.
+	 *
+	 * @return this instruction's label
+	 */
 	public String getLabel() {
 		return label;
 	}
 
+	/**
+	 * Returns this instruction's opcode.
+	 *
+	 * @return this instruction's opcode
+	 */
 	public String getOpcode() {
 		return opcode;
 	}
@@ -43,6 +53,11 @@ public abstract class Instruction {
 	 */
 	public abstract int execute(Machine machine);
 
+	/**
+	 * Returns this instruction's label formatted for console output.
+	 *
+	 * @return this instruction's label formatted for console output
+	 */
 	protected String getLabelString() {
 		return (getLabel() == null) ? "" : getLabel() + ": ";
 	}
