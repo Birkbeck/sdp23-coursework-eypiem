@@ -1,9 +1,6 @@
 package sml;
 
 
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import sml.instruction.factory.InstructionFactory;
 
 import java.io.File;
@@ -21,14 +18,12 @@ import java.util.Scanner;
  */
 public final class Translator {
     private final String fileName; // source file of SML code
-    private final ApplicationContext context;
 
     // line contains the characters in the current line that's not been processed yet
     private String line = "";
 
     public Translator(String fileName) {
         this.fileName = fileName;
-        this.context = new AnnotationConfigApplicationContext(AppConfig.class);
     }
 
     // translate the small program in the file into lab (the labels) and
@@ -69,12 +64,8 @@ public final class Translator {
 
         String opcode = scan();
 
-        try {
-            InstructionFactory factory = context.getBean(opcode, InstructionFactory.class);
-            return factory.create(label, this::scan);
-        } catch (BeansException e) {
-            throw new RuntimeException("No instruction '" + opcode + "' available");
-        }
+        InstructionFactory factory = InstructionFactoryCreator.getInstance().getInstructionFactory(opcode);
+        return factory.create(label, this::scan);
 
         // TODO: add code for all other types of instructions
 
