@@ -20,7 +20,6 @@ class SubInstructionTest {
     void setUp() {
         machine = new Machine(new Registers());
         registers = machine.getRegisters();
-        //...
     }
 
     @AfterEach
@@ -45,5 +44,67 @@ class SubInstructionTest {
         Instruction instruction = new SubInstruction(null, EAX, EBX);
         instruction.execute(machine);
         Assertions.assertEquals(-11, machine.getRegisters().get(EAX));
+    }
+
+    @Test
+    void executeEquals() {
+        var i1 = new SubInstruction(null, EAX, EBX);
+        var i2 = new SubInstruction(null, EAX, EBX);
+
+        Assertions.assertEquals(i1, i2);
+    }
+
+    @Test
+    void executeEqualsTwo() {
+        var i1 = new SubInstruction("L1", EAX, EBX);
+        var i2 = new SubInstruction("L1", EAX, EBX);
+
+        Assertions.assertEquals(i1, i2);
+    }
+
+    @Test
+    void executeNotEquals() {
+        var i1 = new SubInstruction(null, EAX, EBX);
+        var i2 = new SubInstruction("L1", EAX, EBX);
+
+        Assertions.assertNotEquals(i1, i2);
+    }
+
+    @Test
+    void executeNotEqualsTwo() {
+        var i1 = new SubInstruction(null, EAX, EBX);
+        var i2 = new SubInstruction(null, EBX, EBX);
+
+        Assertions.assertNotEquals(i1, i2);
+    }
+
+    @Test
+    void executeNotEqualsThree() {
+        var i1 = new SubInstruction(null, EAX, EBX);
+        var i2 = new SubInstruction(null, EAX, EAX);
+
+        Assertions.assertNotEquals(i1, i2);
+    }
+
+    @Test
+    void executeNotEqualsFour() {
+        Assertions.assertNotEquals(new Object(), new SubInstruction(null, EAX, EBX));
+    }
+
+    @Test
+    void executeNotEqualsFive() {
+        Assertions.assertNotEquals(null, new SubInstruction(null, EAX, EBX));
+    }
+
+    @Test
+    void executeValidToString() {
+        var i = new SubInstruction(null, EAX, EBX);
+        Assertions.assertEquals("sub EAX EBX", i.toString());
+    }
+
+    @Test
+    void executeValidToStringTwo() {
+        var i = new SubInstruction("L1", EAX, EBX);
+        Assertions.assertEquals("L1: sub EAX EBX", i.toString());
     }
 }

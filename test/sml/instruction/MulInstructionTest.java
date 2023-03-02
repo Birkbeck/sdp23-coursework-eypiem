@@ -20,7 +20,6 @@ class MulInstructionTest {
     void setUp() {
         machine = new Machine(new Registers());
         registers = machine.getRegisters();
-        //...
     }
 
     @AfterEach
@@ -54,5 +53,67 @@ class MulInstructionTest {
         Instruction instruction = new MulInstruction(null, EAX, EBX);
         instruction.execute(machine);
         Assertions.assertEquals(0, machine.getRegisters().get(EAX));
+    }
+
+    @Test
+    void executeEquals() {
+        var i1 = new MulInstruction(null, EAX, EBX);
+        var i2 = new MulInstruction(null, EAX, EBX);
+
+        Assertions.assertEquals(i1, i2);
+    }
+
+    @Test
+    void executeEqualsTwo() {
+        var i1 = new MulInstruction("L1", EAX, EBX);
+        var i2 = new MulInstruction("L1", EAX, EBX);
+
+        Assertions.assertEquals(i1, i2);
+    }
+
+    @Test
+    void executeNotEquals() {
+        var i1 = new MulInstruction(null, EAX, EBX);
+        var i2 = new MulInstruction("L1", EAX, EBX);
+
+        Assertions.assertNotEquals(i1, i2);
+    }
+
+    @Test
+    void executeNotEqualsTwo() {
+        var i1 = new MulInstruction(null, EAX, EBX);
+        var i2 = new MulInstruction(null, EBX, EBX);
+
+        Assertions.assertNotEquals(i1, i2);
+    }
+
+    @Test
+    void executeNotEqualsThree() {
+        var i1 = new MulInstruction(null, EAX, EBX);
+        var i2 = new MulInstruction(null, EAX, EAX);
+
+        Assertions.assertNotEquals(i1, i2);
+    }
+
+    @Test
+    void executeNotEqualsFour() {
+        Assertions.assertNotEquals(new Object(), new MulInstruction(null, EAX, EBX));
+    }
+
+    @Test
+    void executeNotEqualsFive() {
+        Assertions.assertNotEquals(null, new MulInstruction(null, EAX, EBX));
+    }
+
+    @Test
+    void executeValidToString() {
+        var i = new MulInstruction(null, EAX, EBX);
+        Assertions.assertEquals("mul EAX EBX", i.toString());
+    }
+
+    @Test
+    void executeValidToStringTwo() {
+        var i = new MulInstruction("L1", EAX, EBX);
+        Assertions.assertEquals("L1: mul EAX EBX", i.toString());
     }
 }

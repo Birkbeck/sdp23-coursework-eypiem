@@ -20,7 +20,6 @@ class AddInstructionTest {
     void setUp() {
         machine = new Machine(new Registers());
         registers = machine.getRegisters();
-        //...
     }
 
     @AfterEach
@@ -45,5 +44,67 @@ class AddInstructionTest {
         Instruction instruction = new AddInstruction(null, EAX, EBX);
         instruction.execute(machine);
         Assertions.assertEquals(1, machine.getRegisters().get(EAX));
+    }
+
+    @Test
+    void executeEquals() {
+        var i1 = new AddInstruction(null, EAX, EBX);
+        var i2 = new AddInstruction(null, EAX, EBX);
+
+        Assertions.assertEquals(i1, i2);
+    }
+
+    @Test
+    void executeEqualsTwo() {
+        var i1 = new AddInstruction("L1", EAX, EBX);
+        var i2 = new AddInstruction("L1", EAX, EBX);
+
+        Assertions.assertEquals(i1, i2);
+    }
+
+    @Test
+    void executeNotEquals() {
+        var i1 = new AddInstruction(null, EAX, EBX);
+        var i2 = new AddInstruction("L1", EAX, EBX);
+
+        Assertions.assertNotEquals(i1, i2);
+    }
+
+    @Test
+    void executeNotEqualsTwo() {
+        var i1 = new AddInstruction(null, EAX, EBX);
+        var i2 = new AddInstruction(null, EBX, EBX);
+
+        Assertions.assertNotEquals(i1, i2);
+    }
+
+    @Test
+    void executeNotEqualsThree() {
+        var i1 = new AddInstruction(null, EAX, EBX);
+        var i2 = new AddInstruction(null, EAX, EAX);
+
+        Assertions.assertNotEquals(i1, i2);
+    }
+
+    @Test
+    void executeNotEqualsFour() {
+        Assertions.assertNotEquals(new Object(), new AddInstruction(null, EAX, EBX));
+    }
+
+    @Test
+    void executeNotEqualsFive() {
+        Assertions.assertNotEquals(null, new AddInstruction(null, EAX, EBX));
+    }
+
+    @Test
+    void executeValidToString() {
+        var i = new AddInstruction(null, EAX, EBX);
+        Assertions.assertEquals("add EAX EBX", i.toString());
+    }
+
+    @Test
+    void executeValidToStringTwo() {
+        var i = new AddInstruction("L1", EAX, EBX);
+        Assertions.assertEquals("L1: add EAX EBX", i.toString());
     }
 }
