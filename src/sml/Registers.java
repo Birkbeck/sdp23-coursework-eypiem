@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// TODO: write a JavaDoc for the class
 
 /**
  * Represents registers.
@@ -61,8 +60,6 @@ public final class Registers {
         return registers.get((Register) register);
     }
 
-    // TODO: use pattern matching for instanceof
-    // https://docs.oracle.com/en/java/javase/14/language/pattern-matching-instanceof-operator.html
     @Override
     public boolean equals(Object o) {
         if (o instanceof Registers other) {
@@ -76,6 +73,12 @@ public final class Registers {
         return registers.hashCode();
     }
 
+    /**
+     * representation of this instance,
+     * in the form "[register = value, register = value, ..., register = value]"
+     *
+     * @return the string representation of the labels map
+     */
     @Override
     public String toString() {
         return registers.entrySet()

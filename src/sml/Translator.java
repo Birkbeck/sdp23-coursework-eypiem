@@ -68,15 +68,8 @@ public final class Translator {
             return null;
 
         String opcode = scan();
-
         InstructionFactory factory = InstructionFactoryCreator.getInstance().getInstructionFactory(opcode);
         return factory.create(label, this::scan);
-
-        // TODO: add code for all other types of instructions
-
-        // TODO: Then, replace the switch by using the Reflection API
-
-        // TODO: Next, use dependency injection to allow this machine class
     }
 
     private String getLabel() {

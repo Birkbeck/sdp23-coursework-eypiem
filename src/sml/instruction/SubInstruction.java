@@ -13,10 +13,9 @@ import java.util.Objects;
  * @author Amir Parsa Mahdian
  */
 public class SubInstruction extends Instruction {
+    public static final String OP_CODE = "sub";
     private final RegisterName result;
     private final RegisterName source;
-
-    public static final String OP_CODE = "sub";
 
     /**
      * Constructor: a subtraction instruction with a label and an opcode
@@ -55,6 +54,12 @@ public class SubInstruction extends Instruction {
         return Objects.hash(label, result, source);
     }
 
+    /**
+     * representation of this instance,
+     * in the form "label: opcode result source" if label exists, "opcode result source" otherwise.
+     *
+     * @return the string representation of this instruction
+     */
     @Override
     public String toString() {
         return getLabelString() + getOpcode() + " " + result + " " + source;

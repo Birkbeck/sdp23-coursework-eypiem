@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-// TODO: write a JavaDoc for the class
 
 /**
  * Represents labels.
@@ -24,7 +23,6 @@ public final class Labels {
      */
     public void addLabel(String label, int address) {
         Objects.requireNonNull(label);
-        // TODO: Add a check that there are no label duplicates.
         if (labels.containsKey(label)) {
             throw new RuntimeException("Duplicate label " + label + " found.");
         }
@@ -38,10 +36,9 @@ public final class Labels {
      * @return the address the label refers to
      */
     public int getAddress(String label) {
-        // TODO: Where can NullPointerException be thrown here?
-        //       When no mapping exists for the key or the value is explicitly set to null because null cannot be
-        //       assigned to an int.
-        //       Add code to deal with non-existent labels.
+        // Where can NullPointerException be thrown here?
+        // When no mapping exists for the key or the value is explicitly set to null because null cannot be
+        // assigned to an int.
         Integer index = labels.get(label);
         if (index == null) {
             throw new RuntimeException("Label " + label + " not found.");
@@ -57,14 +54,11 @@ public final class Labels {
      */
     @Override
     public String toString() {
-        // TODO: Implement the method using the Stream API (see also class Registers).
         return labels.entrySet()
                 .stream()
                 .map(e -> e.getKey() + " -> " + e.getValue())
                 .collect(Collectors.joining(", ", "[", "]"));
     }
-
-    // TODO: Implement equals and hashCode (needed in class Machine).
 
     @Override
     public boolean equals(Object o) {

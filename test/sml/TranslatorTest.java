@@ -19,18 +19,18 @@ class TranslatorTest {
 
     @BeforeEach
     void setUp() {
-        this.machine = new Machine(new Registers());
+        machine = new Machine(new Registers());
     }
 
     @AfterEach
     void tearDown() {
-        this.machine = null;
+        machine = null;
     }
 
     @Test
     void executeValid() throws IOException {
         Translator t = new Translator("test/res/test1.sml");
-        t.readAndTranslate(this.machine.getLabels(), this.machine.getProgram());
+        t.readAndTranslate(machine.getLabels(), machine.getProgram());
 
         Labels expectedLabels = new Labels();
         expectedLabels.addLabel("L1", 0);
@@ -44,7 +44,7 @@ class TranslatorTest {
         expectedProgram.add(new OutInstruction(null, EAX));
         expectedProgram.add(new JNZInstruction(null, EAX, "L1"));
 
-        Assertions.assertAll(() -> Assertions.assertEquals(this.machine.getLabels(), expectedLabels),
-                () -> Assertions.assertEquals(this.machine.getProgram(), expectedProgram));
+        Assertions.assertAll(() -> Assertions.assertEquals(machine.getLabels(), expectedLabels),
+                () -> Assertions.assertEquals(machine.getProgram(), expectedProgram));
     }
 }

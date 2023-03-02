@@ -13,9 +13,8 @@ import java.util.Objects;
  * @author Amir Parsa Mahdian
  */
 public class OutInstruction extends Instruction {
-    private final RegisterName source;
-
     public static final String OP_CODE = "out";
+    private final RegisterName source;
 
     /**
      * Constructor: an out instruction with a label and an opcode
@@ -49,6 +48,12 @@ public class OutInstruction extends Instruction {
         return Objects.hash(label, source);
     }
 
+    /**
+     * representation of this instance,
+     * in the form "label: opcode source" if label exists, "opcode source" otherwise.
+     *
+     * @return the string representation of this instruction
+     */
     @Override
     public String toString() {
         return getLabelString() + getOpcode() + " " + source;
