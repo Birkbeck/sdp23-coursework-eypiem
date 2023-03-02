@@ -6,10 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -86,7 +84,6 @@ public final class Translator {
             paramObjs[0] = label;
 
             for (int i = 1; i < argumentLen; i++) {
-                // attempt to type the parameters using any available string constructors
                 paramObjs[i] = getParamObj(scan(), paramCons[i]);
             }
             return candidateConstructor.newInstance(paramObjs);
@@ -101,6 +98,11 @@ public final class Translator {
         // TODO: Next, use dependency injection to allow this machine class
     }
 
+    /**
+     * Returns a Properties object containing instructions.
+     *
+     * @return a Properties object containing instructions
+     */
     private static Properties getProperties() {
         Properties properties = new Properties();
         try (InputStream file = new FileInputStream(INSTRUCTIONS)) {
@@ -111,42 +113,22 @@ public final class Translator {
         return properties;
     }
 
-    private static <T> T getParamObj(String s,
-                                     Class<? super T> c) throws NoSuchMethodException, InvocationTargetException,
-            InstantiationException, IllegalAccessException {
-        if (RegisterName.class.isAssignableFrom(c)) {
-            return (T) Register.valueOf(s);
-        }
-        return (T) toWrapper(c).getConstructor(String.class).newInstance(s);
-    }
-
-    private static final Map<Class<?>, Class<?>> PRIMITIVE_TYPE_WRAPPERS = Map.of(int.class,
-            Integer.class,
-            long.class,
-            Long.class,
-            boolean.class,
-            Boolean.class,
-            byte.class,
-            Byte.class,
-            char.class,
-            Character.class,
-            float.class,
-            Float.class,
-            double.class,
-            Double.class,
-            short.class,
-            Short.class,
-            void.class,
-            Void.class);
-
     /**
-     * Return the correct Wrapper class if testClass is primitive
+     * Parses a string into a parameter object (integer, label or register).
      *
-     * @param c class being tested
-     * @return Object class or testClass
+     * @param s   string to be parsed
+     * @param c   parameter object type class
+     * @return parameter object
      */
-    private static Class<?> toWrapper(Class<?> c) {
-        return PRIMITIVE_TYPE_WRAPPERS.getOrDefault(c, c);
+    private static Object getParamObj(String s, Class<?> c) {
+        if (RegisterName.class.isAssignableFrom(c)) {
+            return Register.valueOf(s);
+        } else if (c == int.class) {
+            return Integer.parseInt(s);
+        } else if (c == String.class) {
+            return s;
+        }
+        throw new RuntimeException("Unsupported parameter type '" + c.getSimpleName() + "'.");
     }
 
     private String getLabel() {
