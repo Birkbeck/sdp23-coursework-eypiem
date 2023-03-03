@@ -18,6 +18,12 @@ public class AppConfig {
 
     @Bean
     Function<String, RegisterName> registerValueOf() {
-        return Registers.Register::valueOf;
+        return (String s) -> {
+            try {
+                return Registers.Register.valueOf(s);
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("This machine architecture does not have register named '" + s + "'.");
+            }
+        };
     }
 }
